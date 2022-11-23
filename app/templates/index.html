@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/load.css')}}">
+</head>
+<body>
+  {% extends "base.html" %}
+
+{% block content %}
+
+    <br>
+<div>
+    <div style="margin: 20px">
+
+        <a href="{{ url_for('main.add_vehicle') }}" id="login" class="login">Register New Vehicle</a>
+
+    </div>
+    <div>
+        <form method="post" action="{{url_for('main.search_vehicle')}}">
+            <label for="registration">Vehicle Registration</label>
+            <input name="registration" id="registration" required>
+            <button type="submit">Search Vehicle</button>
+
+        </form>
+    </div>
+<div>
+    <h4>Last 50 Records</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Record Id</th>
+                <th>Record Date</th>
+                <th>Number of People</th>
+                <th>Speed</th>
+
+            </tr>
+        </thead>
+        <tbody>
+        {% if vehicles %}
+        {% for vehicle in vehicles %}
+            <tr>
+                <td>{{vehicle.id}}</td>
+                <td>{{vehicle.recorded_date_time.Date()}}</td>
+                <td>{{vehicle.number_of_people}}</td>
+                <td>{{vehicle.speed}}</td>
+
+
+            </tr>
+            {% endfor %}
+        {%else%}
+        <p>No record found</p>
+        {%endif%}
+        </tbody>
+
+    </table>
+</div>
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Load</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/load.css')}}">
+</head>
+
+<body>
+    {% extends "base.html" %}
+
+    {% block content %}
+
+    <div>
+        <p id="information"> Fill in the vehicle information bellow.</p>
+        <form action="{{url_for('main.add_vehicle_post')}}" method="post">
+                    <label for="registration">Registration Number</label>
+                    <input type="text" id="registration" name="registration">
+
+                    <label for="capacity">Maximum Capacity</label>
+                    <input type="text" id="capacity" name="capacity">
+
+                    <label for="description">Vehicle Description</label>
+                    <input type="text" id="description" name="description">
+
+            <input type="submit" value="Add Vehicle" onsubmit="alert('The data will be recorded')">
+        </form>
+
+    </div>
+
+</body>
+
+
+
+</html>
+{% endblock %}

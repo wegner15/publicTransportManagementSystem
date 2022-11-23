@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/load.css')}}">
+</head>
+<iframe src="{{url_for('main.load_iframe')}}" frameborder="0" id="data_frame"></iframe>
+
+<script>
+    setTimeout(() => {
+        document.getElementById('data_frame').location.reload();
+        close.log("Reloaded")
+    }, 2000);
+</script>
