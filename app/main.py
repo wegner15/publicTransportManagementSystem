@@ -19,7 +19,7 @@ main = Blueprint('main', __name__)
 
 @main.route('/')
 def index():
-    # create_db()
+    create_db()
     # tags = get_all_tags()
     # print(tags)
 
@@ -54,9 +54,13 @@ def add_vehicle_post():
 
 @main.route('/add_record', methods=["POST"])
 def add_record():
-    vehicle = request.form.get("registration")
-    number_of_people = request.form.get("number_of_people")
-    speed = request.form.get("speed")
+    data=request.get_json()
+    vehicle = data["registration"]
+    number_of_people = data["number_of_people"]
+    speed = data["speed"]
+    
+    
     if vehicle and number_of_people and speed:
+        print(vehicle,number_of_people,speed)
         add_vehicle_record(number_of_people=number_of_people, speed=speed, vehicle_number_plate=vehicle)
     return "OK"

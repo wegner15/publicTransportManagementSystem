@@ -31,7 +31,7 @@
         <thead>
             <tr>
                 <th>Record Id</th>
-                <th>Record Date</th>
+                <th>Record Date Time</th>
                 <th>Number of People</th>
                 <th>Speed</th>
 
@@ -42,9 +42,17 @@
         {% for vehicle in vehicles %}
             <tr>
                 <td>{{vehicle.id}}</td>
-                <td>{{vehicle.recorded_date_time.Date()}}</td>
+                <td>{{vehicle.record_date_time}}</td>
+                {%if vehicle.number_of_people|int>1%}
+                <td style="color:orange ;">{{vehicle.number_of_people}}</td>
+                {%else%}
                 <td>{{vehicle.number_of_people}}</td>
+                {%endif%}
+                {%if vehicle.speed|int>40%}
+                <td style="color: red;">{{vehicle.speed}}</td>
+                {%else%}
                 <td>{{vehicle.speed}}</td>
+                {%endif%}
 
 
             </tr>

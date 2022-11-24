@@ -13,9 +13,10 @@ HOGCV = cv2.HOGDescriptor()
 HOGCV.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
 
 record_url = "http://127.0.0.1:5000/add_record"
-last_time = datetime.now()
+
 vehicle_registration = "KBU234Y"
-display_url = "http://192.168.0.103"
+display_url = "http://192.168.187.139" #Node mcu address
+URL = "http://192.168.187.73" #Camera address 
 vehicle_speed = {
     "speed": 0
 }
@@ -33,21 +34,26 @@ def detect(frame):
         cv2.rectangle(frame, (x, y - 20), (w, y), (139, 34, 104), -1)
         cv2.putText(frame, f'P{c}', (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
         c += 1
-    if last_time - datetime.now() > 3600:
+    
+ # Sending counts to database
+    data = {
+        "speed": vehicle_speed["speed"],
+        "number_of_people": c - 1,
+        "registration": vehicle_registration
 
-        data = {
-            "speed": vehicle_speed["speed"],
-            "number_of_people": c - 1,
-            "registration": vehicle_registration
+    }
 
-        }
-        send_data = requests.post(url=record_url, json=data)
-        if send_data.text != "OK":
-            cv2.putText(frame, "Error sending data", (20, 10), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 2)
+    send_data = requests.post(url=record_url, json=data)
+
+
+    if send_data.text != "OK":
+        cv2.putText(frame, "Error sending data", (20, 10), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 2)
     else:
+        # Seinding data for display on the lcd (node mcu)
         speed_request = requests.get(url=display_url+"/?people="+str(c-1))
+        # Get back the speed measures by the accelerometer 
         vehicle_speed["speed"] = int(speed_request.text)
-
+    # video display
     cv2.putText(frame, f'Total Persons : {c - 1}', (20, 450), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 2)
     cv2.imshow('output', frame)
 
@@ -57,11 +63,11 @@ def detect(frame):
 
 
 def detectByCamera():
-    URL = "http://192.168.81.73"
-    set_resolution(url=URL, index=8)
-    # set_quality(url=URL, value=62)
-    # set_awb(url=URL, awb=1)
-    video = VideoCapture(URL + ":81/stream")
+    # Read images from camera
+    
+    set_resolution(url=URL, index=8) #set resolution
+    
+    video = VideoCapture(URL + ":81/stream") #get video from esp camera
 
     print('Detecting people...')
 
@@ -69,15 +75,14 @@ def detectByCamera():
         frame = video.read()
 
         frame = detect(frame)
-        # if writer is not None:
-        #     writer.write(frame)
+        
 
         key = cv2.waitKey(1)
         if key == ord('q'):
             break
 
     video.release()
-    cv2.destroyAllWindows()
+    cv2.destroyAllWindows() #close camera window 
 
 
 if __name__ == "__main__":
