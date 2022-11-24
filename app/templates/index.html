@@ -37,14 +37,14 @@
 
             </tr>
         </thead>
-        <tbody>
+        <tbody style="color:green ;">
         {% if vehicles %}
         {% for vehicle in vehicles %}
             <tr>
                 <td>{{vehicle.id}}</td>
                 <td>{{vehicle.record_date_time}}</td>
                 {%if vehicle.number_of_people|int>1%}
-                <td style="color:orange ;">{{vehicle.number_of_people}}</td>
+                <td style="color:red ;">{{vehicle.number_of_people}}</td>
                 {%else%}
                 <td>{{vehicle.number_of_people}}</td>
                 {%endif%}
